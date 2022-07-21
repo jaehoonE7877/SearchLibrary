@@ -16,6 +16,13 @@ class LibraryCollectionViewController: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
+        navigationItem.title = "영화 찾기"
+
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "magnifyingglass"), style: .plain, target: self, action: #selector(magnifyButtonTapped))
+        
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: " ", style: .plain, target: self, action: #selector(backButtonTapped) )
+        
         let layout = UICollectionViewFlowLayout()
         // 나는 width를 이제 cell 한개의 너비로 설정할 거기 때문에 spacing 다 고려해줘야함
         let spacing: CGFloat = 8
@@ -30,12 +37,34 @@ class LibraryCollectionViewController: UICollectionViewController {
         layout.minimumInteritemSpacing = spacing
         
         collectionView.collectionViewLayout = layout
+        
+        
     }
 
+    @objc
+    func backButtonTapped() {
+        self.navigationController?.popViewController(animated: true)
+        
+    }
+    
+    @objc
+    func magnifyButtonTapped() {
+        
+        let sb = UIStoryboard(name: "TopSearchLibrary", bundle: nil)
+        
+        let vc = sb.instantiateViewController(withIdentifier: TopSearchViewController.identifier) as! TopSearchViewController
+        let nav = UINavigationController(rootViewController: vc)
+        
+        nav.modalPresentationStyle = .fullScreen
+        
+        self.present(nav, animated: true)
+    }
+    
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return movieList.movie.count
     }
+    
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
@@ -48,11 +77,28 @@ class LibraryCollectionViewController: UICollectionViewController {
         let data = movieList.movie[indexPath.row]
         cell.configureCell(data: data)
         
-        
         return cell
     }
     
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        let sb = UIStoryboard(name: "SearchDetailLibrary", bundle: nil)
+        
+        let vc = sb.instantiateViewController(withIdentifier: SearchDetailViewController.identifier)
+                
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    
+    
+    
+    
+    
 }
+
+
+
 
 /*
  
@@ -66,5 +112,4 @@ class LibraryCollectionViewController: UICollectionViewController {
  6. collectionView.collectionViewLayout 에게 위에 선언해준 상수로 레이아웃을 설정할 거라고 말해주기
  */
 
-// 이미지 넣기,
 // 줄거리 보여주기 alert
